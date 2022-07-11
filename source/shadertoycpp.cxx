@@ -1,5 +1,5 @@
 #include <fmt/format.h>
-#include <greeter/greeter.h>
+#include <shadertoycpp/shadertoycpp.hxx>
 
 using namespace greeter;
 
