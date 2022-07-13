@@ -33,12 +33,31 @@ CPMAddPackage(
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
 
+# GLFW
+CPMAddPackage(
+  NAME glfw3
+  GIT_TAG 3.3.7
+  GITHUB_REPOSITORY glfw/glfw
+  OPTIONS "ENKITS_BUILD_EXAMPLES OFF"
+  "GLFW_BUILD_EXAMPLES OFF"
+  "GLFW_BUILD_TESTS OFF"
+  "GLFW_BUILD_DOCS OFF"
+  "GLFW_BUILD_INSTALL OFF"
+)
+
+# IMGUI
+CPMAddPackage(
+  NAME imgui 
+  GIT_TAG v1.88
+  GITHUB_REPOSITORY ocornut/imgui
+)
+
 # ---- Add source files ----
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hxx")
-file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cxx")
+file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h*")
+file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.c*")
 
 # ---- Create library ----
 
@@ -51,7 +70,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt 
+                                              glfw 
+                                              imgui)
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
